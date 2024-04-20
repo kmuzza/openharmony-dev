@@ -1,0 +1,17 @@
+{
+    "name": "OpenHarmony Development Environment",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+    "settings": {
+      // VS Code 设置
+    },
+    "extensions": [
+      // 推荐的 VS Code 扩展
+    ],
+    "forwardPorts": [
+      // 需要转发的端口
+    ],
+    "postCreateCommand": "echo 'Hello, OpenHarmony!'",
+    "remoteUser": "root"
+  }
