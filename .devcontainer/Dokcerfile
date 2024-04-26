@@ -1,0 +1,84 @@
+FROM ubuntu:20.04
+
+WORKDIR /root
+
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN TZ=Asia/Shanghai && sed -i "s@http://.*archive.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list  \
+    && sed -i "s@http://.*security.ubuntu.com@http://repo.huaweicloud.com@g" /etc/apt/sources.list  \
+    && apt-get update -y  \
+    && apt-get install -y locales default-jre default-jdk libelf-dev bc rsync mtools dosfstools \
+    wget curl ssh vim ccache libxi-dev libxrandr-dev libxcursor-dev libxinerama-dev libpixman-1-dev \
+    qemu gcc-arm-none-eabi xsltproc lib32z1-dev libgl1-mesa-dev libx11-dev libxml2-dev kmod \
+    libssl-dev openssl scons python3.8 mtd-utils binutils libglib2.0-dev genext2fs apt-utils gnupg \
+    zlib1g-dev m4 u-boot-tools build-essential unzip make libc6-dev-i386 x11proto-core-dev g++ \
+    libncurses5 libtinfo5 git-lfs gcc cpio perl ruby flex bison python3-pip zip git gperf \
+    doxygen liblz4-tool  python3.8-distutils libffi-dev zlib* e2fsprogs device-tree-compiler \
+    git-core libdwarf-dev lib32ncurses5-dev gnutls-bin gcc-arm-linux-gnueabi  \
+    binutils-dev grsync xxd jfsutils reiserfsprogs xfsprogs squashfs-tools pcmciautils \
+    quota ppp libtinfo-dev libncurses5-dev libncursesw5 libstdc++6 \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/gcc-arm-none-eabi/10.3/linux/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/hc-gen/0.65/linux/hc-gen-0.65-linux.tar \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/gcc_riscv32/7.3.0/linux/gcc_riscv32-linux-7.3.0.tar.gz \
+    && wget -P /home/tools https://mirrors.huaweicloud.com/nodejs/v14.19.1/node-v14.19.1-linux-x64.tar.xz \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/ninja/1.10.1/linux/ninja-linux-x86-1.10.1.tar.gz  \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/gn/2021/linux/gn-linux-x86-2021.tar.gz  \
+    && wget -P /home/tools https://repo.huaweicloud.com/harmonyos/compiler/clang/12.0.1-36cd05/linux/clang_linux-x86_64-36cd05-20221030.tar.bz2  \
+    && wget -P /home/tools https://hm-verify.obs.cn-north-4.myhuaweicloud.com/qemu-5.2.0.tar.xz \
+    && locale-gen "en_US.UTF-8"  \
+    && rm -rf /bin/sh /usr/bin/python /usr/bin/python3  \
+    && mkdir -p /home/tools/gn  \
+    && mkdir -p /home/tools/ninja  \
+    && ln -s /bin/bash /bin/sh  \
+    && ln -s /usr/bin/python3.8 /usr/bin/python3  \
+    && ln -s /usr/bin/python3.8 /usr/bin/python \
+    && pip3 install --trusted-host https://repo.huaweicloud.com \
+    -i https://repo.huaweicloud.com/repository/pypi/simple \
+    pycryptodome ecdsa redis kconfiglib setuptools requests ohos-build \
+    pymongo  pyyaml prompt_toolkit==1.0.14 json2html yagmail python-jenkins  \
+    && tar -xvf /home/tools/hc-gen-0.65-linux.tar -C /home/tools \
+    && tar -xvf /home/tools/gcc_riscv32-linux-7.3.0.tar.gz -C /home/tools \
+    && tar -xvf /home/tools/clang_linux-x86_64-36cd05-20221030.tar.bz2 -C /home/tools  \
+    && tar -xvf /home/tools/ninja-linux-x86-1.10.1.tar.gz -C /home/tools/ninja  \
+    && tar -xvf /home/tools/gn-linux-x86-2021.tar.gz -C /home/tools/gn  \
+    && tar -xJf /home/tools/node-v14.19.1-linux-x64.tar.xz -C /home/tools  \
+    && tar -jxvf /home/tools/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2 -C /home/tools \
+    && tar -xJf /home/tools/qemu-5.2.0.tar.xz -C /home/tools  \
+    && cp /home/tools/node-v14.19.1-linux-x64/bin/node /usr/local/bin  \
+    && ln -s /home/tools/node-v14.19.1-linux-x64/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm  \
+    && ln -s /home/tools/node-v14.19.1-linux-x64/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx  \
+    && sed -i '$aexport PATH=/home/tools/hc-gen:$PATH' /root/.bashrc  \
+    && sed -i '$aexport PATH=/home/tools/gcc_riscv32/bin:$PATH' /root/.bashrc \
+    && sed -i '$aexport PATH=/home/tools/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH' /root/.bashrc \
+    && sed -i '$aexport PATH=/home/tools/clang_linux-x86_64-36cd05-20221030/bin:$PATH' /root/.bashrc \
+    && sed -i '$aexport PATH=/home/tools/ninja:$PATH' /root/.bashrc  \
+    && sed -i '$aexport PATH=/home/tools/gn:$PATH' /root/.bashrc  \
+    && sed -i '$aexport PATH=/home/tools/node-v14.19.1-linux-x64/bin:$PATH' /root/.bashrc  \
+    && sed -i '$aexport PATH=/root/.local/bin:$PATH' /root/.bashrc \
+    && export PATH=/home/tools/hc-gen:$PATH  \
+    && export PATH=/home/tools/gcc_riscv32/bin:$PATH \
+    && export PATH=/home/tools/gcc-arm-none-eabi-10.3-2021.10/bin:$PATH \
+    && export PATH=/home/tools/clang_linux-x86_64-36cd05-20221030/bin:$PATH  \
+    && export PATH=/home/tools/ninja:$PATH  \
+    && export PATH=/home/tools/gn:$PATH  \
+    && export PATH=/home/tools/node-v14.19.1-linux-x64/bin:$PATH  \
+    && export PATH=/root/.local/bin:$PATH  \
+    && cd /home/tools/qemu-5.2.0  \
+    && mkdir build  && cd build  \
+    && ../configure --target-list=arm-softmmu  \
+    && make -j  \
+    && make install \
+    && cd /root     \
+    && rm -rf /home/tools/*.xz  \
+    && rm -rf /home/tools/*.gz  \
+    && rm -rf /home/tools/*.tar  \
+    && rm -rf /home/tools/*.bz2 \
+    && rm -rf /home/tools/qemu-5.2.0 \
+    && npm install -g @ohos/hpm-cli --registry https://mirrors.huaweicloud.com/repository/npm/ \
+    && pip3 install ohos-build
+
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=en_US.UTF-8 TZ=Asia/Shanghai
+
+
+CMD ["/bin/bash"]
