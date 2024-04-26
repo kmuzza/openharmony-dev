@@ -1,17 +1,7 @@
 {
   "name": "OpenHarmony Development Environment",
-  "build": {
-    "context": ".",
-    "dockerfile": "Dockerfile"
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {
-      "version": "latest"
-    }
-    // 根据需要添加其他特性
-  },
+  "image": "swr.cn-south-1.myhuaweicloud.com/openharmony-docker/docker_oh_mini:3.2",
   "settings": {
-    // 配置VS Code设置
     "terminal.integrated.shell.linux": "/bin/bash",
     "editor.formatOnSave": true,
     "git.enableCommitSigning": false
@@ -19,11 +9,11 @@
   "extensions": [
     "ms-python.python",
     "ms-vscode.cpptools",
-    "redhat.vscode-yaml",
+    "redhat.vscode-yaml"
     // 添加其他对OpenHarmony开发有帮助的VS Code扩展
   ],
   "forwardPorts": [
-    // 配置需要转发的端口
+    // 在这里配置需要转发的端口，例如8080
   ],
   "postCreateCommand": "echo 'OpenHarmony环境准备就绪！'",
   "remoteUser": "root"
