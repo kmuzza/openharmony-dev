@@ -70,7 +70,7 @@ tar -zxvf nuclei-qemu-2022.08-linux-x64.tar.gz
 首先进入到GCC编译目录。
 
 ```bash
-cd /workspaces/ceshii/liteos_m/targets/riscv_nuclei_gd32vf103_soc_gcc/GCC
+cd /workspaces/Your_GithubName/liteos_m/targets/riscv_nuclei_gd32vf103_soc_gcc/GCC
 make all
 cd build
 ```
