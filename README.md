@@ -33,19 +33,19 @@ apt install vim
 vim /etc/profile
 ```
 
-在文件末尾添加以下行（替换`/path/to/your/application`为实际路径）：
+按键i进入编辑状态，光标移动到文档最后添加以下行
 
 ```bash
-export PATH="/path/to/your/application:$PATH"
+PATH=$PATH:/opt/gcc/bin/
 ```
 
-保存并退出Vim（如果您熟悉Vim的话）：
+按键esc 退出编辑状态，输入：wq保存编辑内容。
 
 ```bash
 :wq!
 ```
 
-然后更新环境变量：
+更新环境变量：
 
 ```bash
 source /etc/profile
