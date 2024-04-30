@@ -1,4 +1,4 @@
-# QEMU for RISC-V 安装指南
+# 1. 学习Qemu RISC-V的安装使用和OpenHarmony的编译与调试。
 
 本文档旨在帮助用户在Codespace环境中配置和安装QEMU for RISC-V。
 
